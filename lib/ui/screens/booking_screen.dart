@@ -40,6 +40,17 @@ class _BookingScreenState extends State<BookingScreen> {
               SizedBox(height: 32),
               _buildTopButtomGroup(),
               SizedBox(height: 32),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: airportData.length,
+                  itemBuilder: (context, index){
+                    final data = airportData[index];
+                    return Card(
+                        child: Text(data['airport_name']),
+                    );
+                  },
+                ),
+              )
               // Expanded(child: ListView.builder(
               //   itemCount: airportData.length,
               //     itemBuilder: (context,index){
@@ -88,38 +99,38 @@ class _BookingScreenState extends State<BookingScreen> {
       children: [
         Container(
           padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(50),
+          ),
           child: Icon(Icons.flight_sharp, color: Colors.green, size: 32),
+        ),
+        Container(
+          padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(50),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.all(20),
           child: Icon(Icons.home_work, color: Colors.green, size: 32),
+        ),
+        Container(
+          padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(50),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.all(20),
           child: Icon(Icons.ac_unit, color: Colors.green, size: 32),
+        ),
+        Container(
+          padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(50),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.all(20),
           child: Icon(
             Icons.baby_changing_station,
             color: Colors.green,
             size: 32,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(50),
           ),
         ),
       ],
