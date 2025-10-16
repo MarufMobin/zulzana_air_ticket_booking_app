@@ -23,20 +23,14 @@ class _BookingScreenState extends State<BookingScreen> {
   // there are some use able variables
   String? _fromAirport;
   String? _toAirport;
-
   DateTime? _selectedDate;
   int _passengerCount = 1;
-
-  // List of airport name
-  // List<String> airportList = _airportData.map((airport) =>
-  // airport.airportName ?? '').toList();
 
   // Data Fetch are here by function
   Future<void> loadAirportData() async {
     final data = await _airportController.fetchAirportData();
     setState(() {
       _airportData = data;
-
     });
   }
 
@@ -66,6 +60,52 @@ class _BookingScreenState extends State<BookingScreen> {
       setState(() => _selectedDate = picked);
     }
   }
+  void _showMyDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('ZulZana Air Ticket Invoice', style: TextStyle(
+            color: Colors.green,
+          ),),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+
+              Text('User Going From ${_fromAirport}',style: TextStyle(
+                fontSize: 18,
+              ),),
+              Text('User Going TO ${_toAirport}',style: TextStyle(
+                fontSize: 18,
+              ),),
+              Text('User Going From ${_selectedDate}',style: TextStyle(
+                fontSize: 14,
+              ),),
+              Text('User Going From ${_passengerCount}',style: TextStyle(
+                fontSize: 18,
+              ),),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // closes the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Add your action here
+                Navigator.of(context).pop(); // closes the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +118,7 @@ class _BookingScreenState extends State<BookingScreen> {
             children: [
               SizedBox(height: 32),
               _buildTopButtonGroup(),
+              SizedBox(height: 32),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: SearchableDropDown(
@@ -131,46 +172,26 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
               ),
               SizedBox(height: 32),
-              _buildPassengerSelector(),
               _buildDatePicker(),
+              _buildPassengerSelector(),
+              SizedBox(height: 32),
+              SizedBox(
+                width: double.maxFinite,
 
-              // _buildAirportSelector(),
-              // SizedBox(height: 32),
-              // _isLoading
-              //     ? Center(child: CircularProgressIndicator())
-              //     :
-              //
-              // Column(
-              //   children: [
-              //     TextField(
-              //       controller: controller,
-              //       decoration: InputDecoration(hintText: 'Search Airport'),
-              //       onChanged: (value) {
-              //         setState(() => query = value);
-              //       },
-              //     ),
-              //     Expanded(
-              //       child: ListView(
-              //         children: airportList
-              //             .where((airport) =>
-              //             airport.toLowerCase().contains(query.toLowerCase()))
-              //             .map((airport) => ListTile(title: Text(airport)))
-              //             .toList(),
-              //       ),
-              //     ),
-              //   ],
-              // );
-              // _buildAirportSelector(),
-              // Expanded(
-              //   child: ListView.builder(
-              //     itemCount: _airportData.length,
-              //     itemBuilder: (context, index) {
-              //       return ListTile(
-              //         title: Text(_airportData[index].airportName.toString()),
-              //       );
-              //     },
-              //   ),
-              // ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ElevatedButton(
+                    onPressed: ()=> _showMyDialog(context),
+
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        Color(0xFF228B22),
+                      ),
+                    ),
+                    child: Icon(Icons.search, color: Colors.white, size: 32),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -178,46 +199,6 @@ class _BookingScreenState extends State<BookingScreen> {
     );
   }
 
-  // Widget _buildAirportSelector() {
-  //   return Row(
-  //     children: [
-  //       Expanded(
-  //         child: DropdownButtonFormField<AirportModel>(
-  //           value: _fromAirport,
-  //           hint: const Text('From'),
-  //           items: _airportData
-  //               .map(
-  //                 (a) => DropdownMenuItem(
-  //                   value: a,
-  //                   child: Text('${a.airportName} (${a.code})'),
-  //                 ),
-  //               )
-  //               .toList(),
-  //           onChanged: (value) => setState(() => _fromAirport = value),
-  //         ),
-  //       ),
-  //       IconButton(
-  //         icon: const Icon(Icons.swap_horiz, color: Colors.green, size: 32),
-  //         onPressed: _swapAirports,
-  //       ),
-  //       Expanded(
-  //         child: DropdownButtonFormField<AirportModel>(
-  //           value: _toAirport,
-  //           hint: const Text('To'),
-  //           items: _airportData
-  //               .map(
-  //                 (a) => DropdownMenuItem(
-  //                   value: a,
-  //                   child: Text('${a.airportName} (${a.code})'),
-  //                 ),
-  //               )
-  //               .toList(),
-  //           onChanged: (value) => setState(() => _toAirport = value),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
   void _selectPassengers() async {
     int tempCount = _passengerCount;
     await showModalBottomSheet(
@@ -347,5 +328,6 @@ class _BookingScreenState extends State<BookingScreen> {
       centerTitle: true,
     );
   }
+
   // App Bar are end here
 }
