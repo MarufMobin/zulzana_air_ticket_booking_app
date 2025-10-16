@@ -10,7 +10,7 @@ class AirportController{
       final List jsonList = jsonDecode(response.body);
       return jsonList.map((e)=>AirportModel.fromJson(e)).toList();
     }else{
-      throw Exception('Some Network issue when fatching Data form Api');
+      throw Exception('Some Network issue when fetching Data form Api');
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:zulzana_air_travel/controller/airport_controller.dart';
+import 'package:zulzana_air_travel/model/airport_model.dart';
 import 'package:zulzana_air_travel/ui/widgets/background_screen.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
@@ -11,38 +11,28 @@ class BookingScreen extends StatefulWidget {
 }
 
 class _BookingScreenState extends State<BookingScreen> {
-  List<dynamic> airportData = [];
+  // Airport Controller are call here
+  final AirportController _airportController = AirportController();
 
-  // Future<List<AirportModel>> fetchAirportData() async {
-  //   final response = await http.get(
-  //     Uri.parse(
-  //       'https://enterpise.s3.ap-southeast-1.amazonaws.com/resources/airport.json',
-  //     ),
-  //   );
-  //   airportData = jsonDecode(response.body);
-  //
-  //   return airportData;
-  // }
+  // Fetch data are stay in array
+  List<AirportModel> _airportData = [];
 
-  Future<void> fetchAirportData() async {
-    final response = await http.get(
-      Uri.parse(
-        'https://enterpise.s3.ap-southeast-1.amazonaws.com/resources/airport.json',
-      ),
-    );
-    airportData = jsonDecode(response.body);
+  bool _isLoading = true;
 
-  }
-  @override
-  void initState() {
-    super.initState();
+  // Data Fetch are here by function
+  Future<void> loadAirportData() async {
+    final data = await _airportController.fetchAirportData();
     setState(() {
-      fetchAirportData();
+      _airportData = data;
+      _isLoading = false;
     });
   }
 
-  final String airportFromValue = '';
-  final String airportToValue = '';
+  @override
+  void initState() {
+    loadAirportData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,104 +46,19 @@ class _BookingScreenState extends State<BookingScreen> {
               SizedBox(height: 32),
               _buildTopButtonGroup(),
               SizedBox(height: 32),
-
-              // Expanded(
-              //   child: ListView.builder(
-              //     itemCount: airportData.length,
-              //     itemBuilder: (context, index) {
-              //       return Card(
-              //         child: Text(airportData[index].airportName.toString()),
-              //       );
-              //     }
-              //   ),
-              // ),
-              //
-
-              // Expanded(
-              //   child: DropdownButtonFormField(
-              //     value: airportFromValue,
-              //     items: airportData
-              //         .map((e) => DropdownMenuItem(child: Text(e['airport_name']), value: e['airport_name']))
-              //         .toList(),
-              //     onChanged: (value){
-              //       setState(() {
-              //         // airportFromValue = value;
-              //       });
-              //     },
-              //   ),
-              // ),
-              //{
-              // code: 00J,
-              // airport_name: Georgia Pacific,
-              // city_name: Cedar Springs,
-              // city_code: ,
-              // country_name: United States, search_contents: 00J - Georgia Pacific - Cedar Springs, United States}
-              // Expanded(
-              //   child: DropdownButtonFormField(
-              //     items: airportData
-              //         .map((e) => DropdownMenuItem(child: Text(e['airport_name']), value: e['airport_name']))
-              //         .toList(),
-              //     onChanged: (value) => value!,
-              //   ),
-              // ),
-              // Expanded(
-              //   child: ListView.builder(
-              //     itemCount: airportData.length,
-              //     itemBuilder: (context, index) {
-              //       final data = airportData[index];
-              //       return Card(child: Text(data));
-              //     },
-              //   ),
-              // ),
-              // Expanded(child: ListView.builder(
-              //   itemCount: airportData.length,
-              //     itemBuilder: (context,index){
-              //   return Card(
-              //     child: Text(airportData[index]['airport_name'].toString()),
-              //   );
-              // }))
-
-              // DropdownButtonFormField(
-              //   items: categories
-              //       .map(
-              //         (category) => DropdownMenuItem(
-              //       value: category,
-              //       child: Text(category),
-              //     ),
-              //   )
-              //       .toList(),
-              //   onChanged: (value) => selectedCategory = value!,
-              //   decoration: InputDecoration(labelText: 'Please Selected One'),
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.all(10),
-              //   child: DropdownButtonFormField(
-              //
-              //     items: airportData
-              //         .map(
-              //           (elm) => DropdownMenuItem(
-              //             child: Text(elm['airport_name']),
-              //             value: elm['airport_name'],
-              //           ),
-              //         )
-              //         .toList(),
-              //     onChanged: (value) {},
-              //   ),
-              // ),
-
+              _isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : Text('Data find'),
               Expanded(
                 child: ListView.builder(
-                  itemCount: airportData.length,
-                  itemBuilder: (context,index){
-                    final dt = airportData[index];
+                  itemCount: _airportData.length,
+                  itemBuilder: (context, index) {
                     return Card(
-                      child: Text(  dt['airport_name']?? ''),
+                      child: Text(_airportData.first.countryName.toString()),
                     );
-                  },
+                  }
                 ),
               ),
-
-
             ],
           ),
         ),
