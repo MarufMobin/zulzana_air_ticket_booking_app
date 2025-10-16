@@ -13,6 +13,17 @@ class BookingScreen extends StatefulWidget {
 class _BookingScreenState extends State<BookingScreen> {
   List<dynamic> airportData = [];
 
+  // Future<List<AirportModel>> fetchAirportData() async {
+  //   final response = await http.get(
+  //     Uri.parse(
+  //       'https://enterpise.s3.ap-southeast-1.amazonaws.com/resources/airport.json',
+  //     ),
+  //   );
+  //   airportData = jsonDecode(response.body);
+  //
+  //   return airportData;
+  // }
+
   Future<void> fetchAirportData() async {
     final response = await http.get(
       Uri.parse(
@@ -20,13 +31,18 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
     );
     airportData = jsonDecode(response.body);
-  }
 
+  }
   @override
   void initState() {
     super.initState();
-    fetchAirportData();
+    setState(() {
+      fetchAirportData();
+    });
   }
+
+  final String airportFromValue = '';
+  final String airportToValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -38,19 +54,57 @@ class _BookingScreenState extends State<BookingScreen> {
           child: Column(
             children: [
               SizedBox(height: 32),
-              _buildTopButtomGroup(),
+              _buildTopButtonGroup(),
               SizedBox(height: 32),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: airportData.length,
-                  itemBuilder: (context, index){
-                    final data = airportData[index];
-                    return Card(
-                        child: Text(data['airport_name']),
-                    );
-                  },
-                ),
-              )
+
+              // Expanded(
+              //   child: ListView.builder(
+              //     itemCount: airportData.length,
+              //     itemBuilder: (context, index) {
+              //       return Card(
+              //         child: Text(airportData[index].airportName.toString()),
+              //       );
+              //     }
+              //   ),
+              // ),
+              //
+
+              // Expanded(
+              //   child: DropdownButtonFormField(
+              //     value: airportFromValue,
+              //     items: airportData
+              //         .map((e) => DropdownMenuItem(child: Text(e['airport_name']), value: e['airport_name']))
+              //         .toList(),
+              //     onChanged: (value){
+              //       setState(() {
+              //         // airportFromValue = value;
+              //       });
+              //     },
+              //   ),
+              // ),
+              //{
+              // code: 00J,
+              // airport_name: Georgia Pacific,
+              // city_name: Cedar Springs,
+              // city_code: ,
+              // country_name: United States, search_contents: 00J - Georgia Pacific - Cedar Springs, United States}
+              // Expanded(
+              //   child: DropdownButtonFormField(
+              //     items: airportData
+              //         .map((e) => DropdownMenuItem(child: Text(e['airport_name']), value: e['airport_name']))
+              //         .toList(),
+              //     onChanged: (value) => value!,
+              //   ),
+              // ),
+              // Expanded(
+              //   child: ListView.builder(
+              //     itemCount: airportData.length,
+              //     itemBuilder: (context, index) {
+              //       final data = airportData[index];
+              //       return Card(child: Text(data));
+              //     },
+              //   ),
+              // ),
               // Expanded(child: ListView.builder(
               //   itemCount: airportData.length,
               //     itemBuilder: (context,index){
@@ -86,6 +140,20 @@ class _BookingScreenState extends State<BookingScreen> {
               //     onChanged: (value) {},
               //   ),
               // ),
+
+              Expanded(
+                child: ListView.builder(
+                  itemCount: airportData.length,
+                  itemBuilder: (context,index){
+                    final dt = airportData[index];
+                    return Card(
+                      child: Text(  dt['airport_name']?? ''),
+                    );
+                  },
+                ),
+              ),
+
+
             ],
           ),
         ),
@@ -93,7 +161,7 @@ class _BookingScreenState extends State<BookingScreen> {
     );
   }
 
-  Widget _buildTopButtomGroup() {
+  Widget _buildTopButtonGroup() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
